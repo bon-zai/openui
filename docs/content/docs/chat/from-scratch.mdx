@@ -14,7 +14,27 @@ This path covers:
 - optional thread history
 - optional headless customization
 
-{/* add visual: flow-chart showing frontend page -> processMessage -> /api/chat route -> OpenAI -> toReadableStream() -> openAIReadableStreamAdapter() -> rendered UI with componentLibrary */}
+```mermaid
+flowchart TD
+    P["Page — FullScreen"]
+    PM["processMessage()"]
+    API["/api/chat — route handler"]
+    OAI["OpenAI — chat.completions.create()"]
+    RS["response.toReadableStream()"]
+    AD["openAIReadableStreamAdapter()"]
+
+    subgraph UI["Rendered UI"]
+        TXT["Text responses"]
+        GEN["Generative UI (componentLibrary)"]
+    end
+
+    P -->|"user message"| PM
+    PM -->|"POST + OpenAI messages (messageFormat.toApi)"| API
+    API -->|"stream: true"| OAI
+    OAI --> RS
+    RS --> AD
+    AD -->|"parsed stream"| UI
+```
 
 ## Prerequisites
 

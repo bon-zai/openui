@@ -8,6 +8,7 @@ This page introduces headless mode and the role of `ChatProvider` in a custom ch
 The trade-off is simple: you get full control over rendering, but you become responsible for composing the sidebar, message list, and composer yourself.
 
 At the center is `ChatProvider`, which manages:
+
 - streaming state
 - thread list and selection
 - message sending/cancelation
@@ -40,7 +41,42 @@ The usual build order is:
 2. read state with `useThread()` and `useThreadList()`
 3. render your own sidebar, messages, and composer components
 
-{/* add visual: flow-chart showing ChatProvider at the center with hooks, backend config, and custom UI components around it */}
+```mermaid
+flowchart TD
+    subgraph Backend["Backend Config"]
+        A1["apiUrl / processMessage"]
+        A2["streamProtocol"]
+        A3["messageFormat"]
+        A4["threadApiUrl / custom handlers"]
+    end
+
+    subgraph Provider["① Configure"]
+        CP["ChatProvider"]
+    end
+
+    subgraph Hooks["② Read State"]
+        H1["useThread()"]
+        H2["useThreadList()"]
+    end
+
+    subgraph UI["③ Render"]
+        U1["Messages"]
+        U2["Composer"]
+        U3["Thread Sidebar"]
+    end
+
+    A1 --> CP
+    A2 --> CP
+    A3 --> CP
+    A4 --> CP
+
+    CP --> H1
+    CP --> H2
+
+    H1 --> U1
+    H1 --> U2
+    H2 --> U3
+```
 
 ## Related guides
 

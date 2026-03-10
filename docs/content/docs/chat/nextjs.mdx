@@ -92,7 +92,25 @@ const systemPrompt = openuiLibrary.prompt(openuiPromptOptions);
 
 Use `openAIAdapter()` only if your backend emits raw SSE chunks instead of the OpenAI SDK readable stream.
 
-{/* add visual: flow-chart showing request from FullScreen -> /api/chat route -> OpenAI chat completions -> toReadableStream() -> openAIReadableStreamAdapter() -> rendered assistant message */}
+```mermaid
+flowchart TD
+    FS["FullScreen"]
+    PM["processMessage()"]
+    MF["messageFormat.toApi() — openAIMessageFormat"]
+    RH["/api/chat — Route Handler"]
+    OAI["OpenAI — chat.completions.create() — stream: true"]
+    RS["response.toReadableStream() — NDJSON"]
+    SP["openAIReadableStreamAdapter() — parses stream"]
+    AM["Rendered assistant message (text or Generative UI)"]
+
+    FS -->|"user message"| PM
+    PM --> MF
+    MF -->|"POST with OpenAI messages + systemPrompt"| RH
+    RH --> OAI
+    OAI --> RS
+    RS --> SP
+    SP --> AM
+```
 
 ## Related guides
 

@@ -101,7 +101,28 @@ const myCustomFormat = {
 };
 ```
 
-{/* add visual: flow-chart showing how messageFormat.toApi affects outgoing chat and thread-create requests, and how messageFormat.fromApi affects thread loading */}
+```mermaid
+flowchart TD
+    subgraph Converters["Built-in Converters"]
+        C1["Default — AG-UI message shape"]
+        C2["openAIMessageFormat — OpenAI chat messages"]
+        C3["openAIConversationMessageFormat — OpenAI Responses items"]
+    end
+
+    Converters -->|"assigned to messageFormat prop"| MF["messageFormat"]
+
+    MF -->|"toApi(messages)"| OUT
+    MF -->|"fromApi(items)"| IN
+
+    subgraph OUT["Outgoing — messageFormat.toApi()"]
+        O1["Chat request — apiUrl or processMessage"]
+        O2["Thread create — threadApiUrl/create"]
+    end
+
+    subgraph IN["Incoming — messageFormat.fromApi()"]
+        I1["Thread load — threadApiUrl/get/:id"]
+    end
+```
 
 ## Related guides
 

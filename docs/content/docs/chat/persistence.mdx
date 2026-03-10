@@ -102,7 +102,19 @@ then provide the individual thread functions instead of relying on the default `
 />;
 ```
 
-{/* add visual: flow-chart showing how threadApiUrl maps to list, create, update, delete, and load requests, and where messageFormat affects create/load payloads */}
+```mermaid
+flowchart TD
+    TA["threadApiUrl — /api/threads"]
+
+    TA --> LIST["LIST\nGET /api/threads/get\nreturns threads + nextCursor"]
+    TA --> CREATE["CREATE\nPOST /api/threads/create\nbody: messages"]
+    TA --> UPDATE["UPDATE\nPATCH /api/threads/update/:id\nbody: Thread"]
+    TA --> DELETE["DELETE\nDELETE /api/threads/delete/:id"]
+    TA --> LOAD["LOAD\nGET /api/threads/get/:id\nreturns message array"]
+
+    CREATE --> MF_TO["messageFormat.toApi()\nconverts outgoing messages"]
+    LOAD --> MF_FROM["messageFormat.fromApi()\nparses loaded messages"]
+```
 
 ## Related guides
 

@@ -157,7 +157,29 @@ const selectedThreadId = useThreadList((state) => state.selectedThreadId);
 
 This is especially useful when your sidebar and message list are separate components and you do not want unrelated state updates to rerender both.
 
-{/* add visual: flow-chart showing how useThread maps to the active conversation and useThreadList maps to the thread sidebar */}
+```mermaid
+flowchart TD
+    CP["ChatProvider (shared state)"]
+
+    subgraph T["useThread() — Active Conversation"]
+        T1["messages · isRunning · isLoadingMessages · threadError"]
+        T2["processMessage() · cancelMessage()"]
+        T3["appendMessages · updateMessage · deleteMessage · setMessages"]
+    end
+
+    subgraph TL["useThreadList() — Thread Sidebar"]
+        TL1["threads · selectedThreadId · isLoadingThreads · threadListError · hasMoreThreads"]
+        TL2["selectThread() · switchToNewThread()"]
+        TL3["loadThreads() · loadMoreThreads() · createThread() · updateThread() · deleteThread()"]
+    end
+
+    CP --> T
+    CP --> TL
+
+    T1 --> U1["MessageList"]
+    T2 --> U2["Composer"]
+    TL1 & TL2 & TL3 --> U3["ThreadSidebar"]
+```
 
 ## Related guides
 
